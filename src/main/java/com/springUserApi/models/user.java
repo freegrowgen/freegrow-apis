@@ -1,5 +1,8 @@
 package com.springUserApi.models;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "users")
 public class user {
     private String emailId;
     private String firstName;
@@ -7,6 +10,7 @@ public class user {
     private long mobileNumber;
     private String image;
     private boolean loggedIn;
+    private String token;
 
     public user() {
 
@@ -58,6 +62,14 @@ public class user {
 
     public boolean getLoggedIn() {
         return this.loggedIn;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return this.token;
     }
 
 }
