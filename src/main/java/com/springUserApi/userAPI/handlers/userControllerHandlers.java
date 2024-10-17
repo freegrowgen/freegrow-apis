@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class userControllerHandlers {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> badRequest() {
-        return ResponseEntity.status(401).body("");
+        return ResponseEntity.status(400).body("Bad Request");
     }   
 }

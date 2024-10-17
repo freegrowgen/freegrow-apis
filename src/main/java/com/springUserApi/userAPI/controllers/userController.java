@@ -3,6 +3,7 @@ package com.springUserApi.userAPI.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,8 @@ public class userController {
     }
 
     @PostMapping("/addUser")
-    public userResponseEnums addUser(@RequestBody user userData) {
+    public userResponseEnums addUser(@RequestBody user userData, @CookieValue("token") String token) {
+        System.out.println("token ....................." + token);
         return userService.saveUserData(userData);
     }
 
