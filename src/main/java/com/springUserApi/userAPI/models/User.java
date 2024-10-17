@@ -1,9 +1,9 @@
-package com.springUserApi.models;
+package com.springUserApi.userAPI.models;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
-public class user {
+public class User {
     private String emailId;
     private String firstName;
     private String lastName;
@@ -12,7 +12,7 @@ public class user {
     private boolean loggedIn;
     private String token;
 
-    public user() {
+    public User() {
 
     }
 
