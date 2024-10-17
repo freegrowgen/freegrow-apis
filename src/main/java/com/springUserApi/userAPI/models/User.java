@@ -3,7 +3,7 @@ package com.springUserApi.userAPI.models;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
-public class User {
+public class user {
     private String emailId;
     private String firstName;
     private String lastName;
@@ -12,7 +12,7 @@ public class User {
     private boolean loggedIn;
     private String token;
 
-    public User() {
+    public user() {
 
     }
 
@@ -70,6 +70,19 @@ public class User {
 
     public String getToken() {
         return this.token;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "emailId='" + emailId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", mobileNumber=" + mobileNumber +
+                ", image='" + image + '\'' +
+                ", loggedIn=" + loggedIn +
+                ", token='" + token + '\'' +
+                '}';
     }
 
 }

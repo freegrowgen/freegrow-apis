@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springUserApi.userAPI.enums.userResponseEnums;
-import com.springUserApi.userAPI.models.User;
+import com.springUserApi.userAPI.models.user;
 import com.springUserApi.userAPI.repos.userRepository;
 
 @Service
@@ -13,12 +13,15 @@ public class userServices {
     @Autowired
     userRepository userDB;
 
-    public userResponseEnums saveUserData(User userData) {
-
+    public userResponseEnums saveUserData(user userData) {
         try {
-            User user = userDB.save(userData);
-            if (user.getEmailId() == userData.getEmailId()) {
+            user findedUser = userDB.findByEmailId(userData.getEmailId());
+            if (findedUser == null || !findedUser.getEmailId().equals(userData.getEmailId())) {
+                userDB.save(userData);
                 return userResponseEnums.SUCCESS;
+            } else if (findedUser.getEmailId().equals(userData.getEmailId())) {
+                return userResponseEnums.ALREADY_EXISTS;
+
             } else {
                 return userResponseEnums.ERROR;
             }

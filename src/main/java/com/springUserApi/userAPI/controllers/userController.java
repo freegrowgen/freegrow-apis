@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springUserApi.userAPI.enums.userResponseEnums;
-import com.springUserApi.userAPI.models.User;
+import com.springUserApi.userAPI.models.user;
 import com.springUserApi.userAPI.repos.userRepository;
 import com.springUserApi.userAPI.services.userServices;
 
@@ -25,12 +25,12 @@ public class userController {
     userServices userService;
 
     @GetMapping("/allUsers")
-    public List<User> getAllUser() {
+    public List<user> getAllUser() {
         return userDb.findAll();
     }
 
     @PostMapping("/addUser")
-    public userResponseEnums addUser(@RequestBody User userData) {
+    public userResponseEnums addUser(@RequestBody user userData) {
         return userService.saveUserData(userData);
     }
 

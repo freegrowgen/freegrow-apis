@@ -4,5 +4,6 @@ public enum userResponseEnums {
     SUCCESS,
     ERROR,
     API_ERROR,
+            ALREADY_EXISTS
 
 }
