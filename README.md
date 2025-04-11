@@ -7,8 +7,5 @@ A scalable backend system for **FreeGrow** — a unified platform empowering emp
 
 - **Java 17**
 - **Spring Boot**
-- **MongoDB (Atlas)** – cloud NoSQL database
-- **Lombok** – boilerplate-free models
-- **Maven** – build & dependency management
-- **REST APIs** – secure & scalable architecture
+- **MongoDB (Atlas)**
 
