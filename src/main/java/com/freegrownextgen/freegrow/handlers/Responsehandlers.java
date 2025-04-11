@@ -1,13 +1,13 @@
-package com.springUserApi.userAPI.handlers;
+package com.freegrownextgen.freegrow.handlers;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice
-public class userControllerHandlers {
+public class Responsehandlers {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> badRequest() {
         return ResponseEntity.status(400).body("Bad Request");
-    }   
+    }
+    
 }

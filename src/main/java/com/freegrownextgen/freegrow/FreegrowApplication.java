@@ -1,13 +1,13 @@
-package com.springUserApi.userAPI;
+package com.freegrownextgen.freegrow;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UserApiApplication {
+public class FreegrowApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserApiApplication.class, args);
+		SpringApplication.run(FreegrowApplication.class, args);
 	}
 
 }
