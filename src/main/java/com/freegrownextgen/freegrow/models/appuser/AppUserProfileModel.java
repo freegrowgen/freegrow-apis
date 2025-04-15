@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * AppUserProfileModel is a model class that represents the profile of an application user.
+ * It contains various fields related to the user's profile information.
+ */
 public class AppUserProfileModel {
     private String firstName;
     private String lastName;

@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * EducationModel is a model class that represents the education details of a user.
+ * It contains various fields related to the user's educational background.
+ */
 public class EducationModel {
     private String degree;
     private String institution;

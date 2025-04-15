@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "employee_users")
+/**
+ * EmployeeUserModel is a model class that represents an employee user in the system.
+ * It contains the email ID of the employee user.
+ */
 public class EmployeeUserModel {
     private String emailId;
 

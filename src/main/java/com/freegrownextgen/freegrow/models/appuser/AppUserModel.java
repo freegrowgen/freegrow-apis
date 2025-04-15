@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "app_users")
+/**
+ * AppUserModel is a model class that represents an application user.
+ * It contains various fields related to the user's information.
+ */
 public class AppUserModel {
     private String firstName;
     private String lastName;

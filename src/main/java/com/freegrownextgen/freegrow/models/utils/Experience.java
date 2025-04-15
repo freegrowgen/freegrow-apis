@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * Experience is a model class that represents the work experience of a user.
+ * It contains various fields related to the user's work experience.
+ */
 public class Experience {
     private String companyName;
     private String designation;

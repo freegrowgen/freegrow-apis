@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+/**
+ * SkillModel is a model class that represents the skills of a user.
+ * It contains various fields related to the user's skills and certifications.
+ */
 public class SkillModel {
     private String skillName;
     private String skillDescription;
