@@ -70,6 +70,9 @@ public class AuthServices implements AuthImpl {
 
             if (request.getOtp() == null) {
                 int user = authRepo.findAndUpdateOtp(request.getEmailId(), authUtils.generateOtp());
+                EmailServices emaiLService = new EmailServices(request.getEmailId(),"Your verification otp to login int FreeGorw","Verifcation Otp","Hello owlrd"); 
+                emaiLService.sendEmail();
+                
                 if (user == 1) {
                     return AuthEnums.OTP_SENT;
                 } else {
