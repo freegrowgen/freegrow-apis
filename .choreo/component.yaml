@@ -1,9 +1,9 @@
-name: FreeGrow API
+name: freegrow-api
 version: 0.0.1
 type: service
 organization: FreeGrow
 endpoints:
-  - name: FreeGrow API
+  - name: freegrow-api
     port: 8080
     type: REST
     networkVisibility: Public
