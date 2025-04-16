@@ -1,5 +1,9 @@
 package com.freegrownextgen.freegrow.models.appuser;
 
+import java.time.Instant;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.freegrownextgen.freegrow.enums.AccountStatusEnum;
@@ -20,9 +24,17 @@ import lombok.NoArgsConstructor;
 public class AppUserModel {
     private String firstName;
     private String lastName;
-    private String email;
+    private String emailId;
     private String password;
     private String mobileNumber;
     private RoleEnum role;
     private AccountStatusEnum accountStatus;
+    private Integer otp; 
+
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
 }
