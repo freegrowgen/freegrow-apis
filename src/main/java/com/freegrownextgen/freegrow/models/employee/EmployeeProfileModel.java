@@ -1,6 +1,10 @@
 package com.freegrownextgen.freegrow.models.employee;
 
+import java.time.Instant;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.freegrownextgen.freegrow.models.appuser.AppUserProfileModel;
 import com.freegrownextgen.freegrow.models.utils.EducationModel;
@@ -37,4 +41,9 @@ public class EmployeeProfileModel extends AppUserProfileModel {
     private List<Experience> employeeExperience;
     private List<SkillModel> employeeSkills;
     private List<EducationModel> employeeEducation;
+     @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
 }

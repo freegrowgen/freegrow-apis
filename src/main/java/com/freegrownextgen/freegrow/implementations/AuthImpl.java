@@ -1,10 +1,11 @@
 package com.freegrownextgen.freegrow.implementations;
 
-import com.freegrownextgen.freegrow.enums.ResponseEnums;
+import com.freegrownextgen.freegrow.enums.AuthEnums;
+import com.freegrownextgen.freegrow.models.requestmodels.auth.SignUpRequestModel;
 
 public interface  AuthImpl {
     
-    ResponseEnums signUP();
+    AuthEnums signUPImpl(SignUpRequestModel request);
 
 
 }

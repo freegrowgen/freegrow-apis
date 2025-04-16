@@ -5,6 +5,7 @@ public enum AccountStatusEnum {
     IN_ACTIVE,
     SUSPENDED,
     DELETED,
-    BLOCKED
+    BLOCKED,
+    PENDING
 
 }

@@ -1,5 +1,10 @@
 package com.freegrownextgen.freegrow.models.appuser;
 
+import java.time.Instant;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +27,9 @@ public class AppUserProfileModel {
     private String country;
     private String zipCode;
     private String profilePictureUrl;      
+     @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
 }

@@ -6,5 +6,6 @@ import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
 
 @Repository 
 public interface  AuthRepository  extends MongoRepository<AppUserModel, String> {
+    public AppUserModel findByEmailId(String emailId);
     
 }
