@@ -1,0 +1,15 @@
+name: FreeGrow API
+version: 0.0.1
+type: service
+organization: FreeGrow
+endpoints:
+  - name: FreeGrow API
+    port: 8080
+    type: REST
+    networkVisibility: Public
+    context: /
+    schemas:
+      - method: POST
+        path: /auth/signup
+      - method: POST
+        path: /auth/login
