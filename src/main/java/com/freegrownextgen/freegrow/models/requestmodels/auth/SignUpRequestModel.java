@@ -13,4 +13,5 @@ public class SignUpRequestModel {
     private String emailId;
     private String password;
     private String mobileNumber;
+    private Integer otp;
 }

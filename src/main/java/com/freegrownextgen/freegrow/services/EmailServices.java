@@ -1,263 +1,166 @@
-
 package com.freegrownextgen.freegrow.services;
 
-/*
- *
- * importing useful modules
- *
- * */
 import java.io.IOException;
-import java.net.*;
-import java.net.http.*;
-import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse.BodyHandlers;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
-/*
- *
- * modules section end
- *
- * */
+
 public class EmailServices {
-    /*
-     * to make a request we need a json object
-     * this methods return json object in the form of String
-     *
-     * */
-    //one params
-    EmailServices(String toEmail) {
-        this.jsonObject= "{"+quote+"toEmail"+quote+":"+quote+toEmail+quote+"}";
-        this.params[0] = toEmail;
 
+    public EmailServices(String toEmail) {
+        this.jsonObject = "{\"toEmail\":\"" + toEmail + "\"}";
+        this.params[0] = toEmail;
     }
-    //two params
-    EmailServices(String toEmail,String title) {
-        this.jsonObject= "{"+quote+"toEmail"+quote+":"+quote+toEmail+quote+","
-                +quote+"title"+quote+":"+quote+title+quote+ "}";
+
+    public EmailServices(String toEmail, String title) {
+        this.jsonObject = "{\"toEmail\":\"" + toEmail + "\",\"title\":\"" + title + "\"}";
         this.params[0] = toEmail;
         this.params[1] = title;
-
     }
-    //three params
-    EmailServices(String toEmail,String title,String subject) {
-        this.jsonObject= "{"+quote+"toEmail"+quote+":"+quote+toEmail+quote+","
-                +quote+"title"+quote+":"+quote+title+quote+","+quote+"subject"+quote+":"+quote+subject+quote+"}";
+
+    public EmailServices(String toEmail, String title, String subject) {
+        this.jsonObject = "{\"toEmail\":\"" + toEmail + "\",\"title\":\"" + title + "\",\"subject\":\"" + subject + "\"}";
         this.params[0] = toEmail;
         this.params[1] = title;
         this.params[2] = subject;
-
     }
-    //four params
-    EmailServices(String toEmail,String title,String subject,String body) {
-        this.jsonObject= "{"+quote+"toEmail"+quote+":"+quote+toEmail+quote+","
-                +quote+"title"+quote+":"+quote+title+quote+","+quote+"subject"+quote+
-                ":"+quote+subject+quote+","+quote+"body"+quote+":"+quote+body+quote+"}";
+
+    public EmailServices(String toEmail, String title, String subject, String body) {
+        this.jsonObject = "{\"toEmail\":\"" + toEmail + "\",\"title\":\"" + title + "\",\"subject\":\"" + subject + "\",\"body\":\"" + body + "\"}";
         this.params[0] = toEmail;
         this.params[1] = title;
         this.params[2] = subject;
         this.params[3] = body;
-
     }
-    //six params
-    EmailServices(String toEmail,String title,
-                String subject,String body,String fromEmail,String passkey) {
-        this.jsonObject= "{"+quote+"toEmail"+quote+":"+quote+toEmail+quote+","
-                +"subject"+":"+quote+title+quote+","+"body"+":"+quote+body+quote
-                +","+"fromEmail"+":"+quote+fromEmail+quote+","+"passkey"+":"+quote+passkey+quote+"}";
+
+    public EmailServices(String toEmail, String title, String subject, String body, String fromEmail, String passkey) {
+        this.jsonObject = "{\"toEmail\":\"" + toEmail + "\",\"subject\":\"" + title + "\",\"body\":\"" + body + "\",\"fromEmail\":\"" + fromEmail + "\",\"passkey\":\"" + passkey + "\"}";
         this.params[0] = toEmail;
         this.params[1] = title;
         this.params[2] = subject;
         this.params[3] = body;
-        this.params[4] = toEmail;
+        this.params[4] = fromEmail;
         this.params[5] = passkey;
-
     }
 
-    /*
-     *
-     * main send method to send email to specific email
-     *
-     *
-     * */
-
-
-    HashMap<String, String> sendEmail(){
-        if(checkEmail(params[0])){
-            if(checkServer()) {
-                if(params[4] != "defaultemailapi@gmail.com"){
-                    if (makeRequestToServer(jsonObject) == "emailSendSuccess") {
-                        response.put("message","emailSendSuccess");
-                        response.put("title",params[1]);
-                        response.put("subject",params[2]);
-                        response.put("body",params[3]);
-                        response.put("fromEmail",params[4]);
+    public HashMap<String, String> sendEmail() {
+        if (checkEmail(params[0])) {
+            if (checkServer()) {
+                if (!params[4].equals("defaultemailapi@gmail.com")) {
+                    String result = makeRequestToServer(jsonObject);
+                    if (result.equals("emailSendSuccess")) {
+                        response.put("message", "emailSendSuccess");
+                        response.put("title", params[1]);
+                        response.put("subject", params[2]);
+                        response.put("body", params[3]);
+                        response.put("fromEmail", params[4]);
+                    } else {
+                        response.put("message", getServerError(result));
                     }
-                    else{
-                        for(int j = 0;j < serverErrors.length;j++){
-                            if(makeRequestToServer(jsonObject) == serverErrors[j]){
-                                response.put("message",serverErrors[j]);
-                                break;
-                            }
-                            else{
-                                response.put("message",makeRequestToServer(jsonObject));
-                            }
-                        }
+                } else {
+                    String result = makeRequestToServer(jsonObject);
+                    if (result.equals("emailSendSuccess")) {
+                        response.put("message", "emailSendSuccess");
+                        response.put("title", params[1]);
+                        response.put("subject", params[2]);
+                        response.put("body", params[3]);
+                    } else {
+                        response.put("message", getServerError(result));
                     }
                 }
-                else{
-                    if (makeRequestToServer(jsonObject) == "emailSendSuccess") {
-                        response.put("message","emailSendSuccess");
-                        response.put("title",params[1]);
-                        response.put("subject",params[2]);
-                        response.put("body",params[3]);
-                    }
-                    else{
-                        for(int j = 0;j < serverErrors.length;j++){
-                            if(makeRequestToServer(jsonObject) == serverErrors[j]){
-                                response.put("message",serverErrors[j]);
-                                break;
-                            }
-                            else{
-                                response.put("message",makeRequestToServer(jsonObject));
-                            }
-                        }
-                    }
-                }
+            } else {
+                response.put("message", "serverIsNotRunning");
             }
-            else{
-                response.put("message","serverIsNotRunning");
-            }
+        } else {
+            response.put("message", "wrongEmail");
         }
-        else{
-            response.put("message","wrongEmail");
-        }
-        return  response;
-
+        return response;
     }
 
-
-    /*
-     * checkServer method to check whether server is running or not
-     *
-     * */
-    static boolean checkServer(){
+    static boolean checkServer() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(url))
                     .GET()
                     .build();
-            HttpClient makeRequest = HttpClient.newHttpClient();
-            try {
-                HttpResponse<String> responseFromServer = makeRequest.send(request,BodyHandlers.ofString());
-
-                if(responseFromServer.body().contains("running")) return true;
-
-                else return false;
-            }
-            catch(IOException e) {
-                return false;
-
-            }
-            catch(InterruptedException e) {
-                return false;
-            }
-        }
-        catch(URISyntaxException e) {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> serverResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return serverResponse.body().contains("running");
+        } catch (IOException | InterruptedException | URISyntaxException e) {
             return false;
         }
     }
-    /*
-     * checking email is valid or not by REGEX
-     *
-     * */
+
     static boolean checkEmail(String email) {
-        if(email.matches(emailValidationRegex)) return true;
-        else return false;
+        return email.matches(emailValidationRegex);
     }
 
-    /*
-     * method to make a request with given parameters
-     *
-     * */
-
-    static String makeRequestToServer(String jsonObject){
-
-        HashMap<String, String> response = new HashMap<>();
+    static String makeRequestToServer(String jsonObject) {
         try {
-
-            HttpRequest postRequest = HttpRequest.newBuilder()
-
+            System.out.println(jsonObject);
+            HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(server))
-                    .POST(BodyPublishers.ofString(jsonObject))
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonObject))
+                    .header("Content-Type", "application/json")
                     .build();
 
-            HttpClient makeRequest = HttpClient.newHttpClient();
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> serverResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            try {
-                HttpResponse<String> responseFromServer = makeRequest.send(postRequest,
-                        BodyHandlers.ofString());
-                if(responseFromServer.body().contains("emailSendSuccess")) {
-                    message= "emailSendSuccess";
+            if (serverResponse.body().contains("emailSendSuccess")) {
+                return "emailSendSuccess";
+            }
+
+            for (String err : serverErrors) {
+                if (serverResponse.body().contains(err)) {
+                    return err;
                 }
-                else{
-                    for(int i = 0;i < serverErrors.length;i++){
-                        if(responseFromServer.body().contains(serverErrors[i])){
-                            message = serverErrors[i];
-                            break;
-                        }
-                        else{
-                            message = "someThingWrong";
-                            //message = responseFromServer.body();
+            }
 
+            return "someThingWrong";
 
-                        }
-                    }
+        } catch (IOException e) {
+            return "IOException";
+        } catch (InterruptedException e) {
+            return "InterruptedException";
+        } catch (URISyntaxException e) {
+            return "URISyntaxException";
+        }
+    }
 
-
-                }
-
-            } catch (IOException e) {
-                message=  "IOException";
-            } catch (InterruptedException e) {
-                message = "InterruptedException";
+    static String getServerError(String message) {
+        for (String err : serverErrors) {
+            if (err.equals(message)) {
+                return err;
             }
         }
-        catch(URISyntaxException e) {
-            message =  "URISyntaxException";
-        }
-
-        return message;
+        return "someThingWrong";
     }
-    static  String url = "https://sendemail.cyclic.app/"; //homepage emailsenderapi url
-    static String server = "https://sendemail.cyclic.app/sendEmail/"; // you need to post data to this url
-    static  String emailValidationRegex = "^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\\.[a-zA-Z]+"; //regex pattern for email validation
-    static  char quote = '"'; // "
 
-    static String jsonObject = ""; //to store jsonobject in the form of string
-    static String message = "empty"; //to store message
-    /*
-     *
-     * must to pass toEmail at the time initializing
-     *
-     *
-     * */
+    static String url = "https://freeemailapi.vercel.app/";
+    static String server = "https://freeemailapi.vercel.app/sendEmail/";
+    static String emailValidationRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+    static String jsonObject = "";
     static String[] params = {
-            "afridfridayan01@gmail.com",//override toEmail
-            "EmailAPI",//title
-            "Test Message",//subject
-            "This Is A Test Message",//body
-            "defaultemailapi@gmail.com",// default from email
-            "securePassword"//wrong password
-    };
+        "afridfridayan01@gmail.com",//override toEmail
+        "EmailAPI",//title
+        "Test Message",//subject
+        "This Is A Test Message",//body
+        "defaultemailapi@gmail.com",// default from email
+        "securePassword"//wrong password
+};
     static String[] serverErrors = {
-            "wrongCredentials", //if any one from fromEmail and passkey is wrong
-            "sendEmailfailed", //this error from server
-            "wrongInput", //wrong json input
-            "wrongUrl", //wrong url or url is broken
-            "serverError", //server is under maintenance
-            "passkeyrequired", //you need to give passkey which is app password
-            "wrongEmail" //email is wrong
+            "wrongCredentials",
+            "sendEmailfailed",
+            "wrongInput",
+            "wrongUrl",
+            "serverError",
+            "passkeyrequired",
+            "wrongEmail"
     };
-    static HashMap<String,String> response = new HashMap<>(); //store response
-
-
+    static HashMap<String, String> response = new HashMap<>();
 }
