@@ -29,6 +29,9 @@ public class AppUserModel {
     private String mobileNumber;
     private RoleEnum role;
     private AccountStatusEnum accountStatus;
+    private Integer otp; 
+
+
     @CreatedDate
     private Instant createdAt;
 

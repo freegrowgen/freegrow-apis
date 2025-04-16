@@ -10,6 +10,7 @@ public enum AuthEnums {
     INVALID_MOBILE_NUMBER,
     INTERNAL_SERVER_ERROR,
     OTP_SENT,
-    INVALID_OTP
+    INVALID_OTP,
+    USER_NOT_FOUND,
     
 }

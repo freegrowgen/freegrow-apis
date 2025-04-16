@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.freegrownextgen.freegrow.enums.AuthEnums;
+import com.freegrownextgen.freegrow.models.requestmodels.auth.LoginRequestModel;
 import com.freegrownextgen.freegrow.models.requestmodels.auth.SignUpRequestModel;
 import com.freegrownextgen.freegrow.models.requestmodels.response.ResponseModel;
 import com.freegrownextgen.freegrow.services.AuthServices;
@@ -30,6 +31,18 @@ public class AuthControlller {
 
         response.setData(auth.signUPImpl(request));
         return response;
+    }
+
+    @PostMapping("/login")
+    ResponseModel Login(@RequestBody LoginRequestModel request) {
+        ResponseModel response = new ResponseModel();
+        if (request.getEmailId() == null || request.getPassword() == null) {
+            response.setData(AuthEnums.BAD_REQUEST);
+            return response;
+        }
+        response.setData(auth.loginImpl(request));
+        return response;
+
     }
 
 }
