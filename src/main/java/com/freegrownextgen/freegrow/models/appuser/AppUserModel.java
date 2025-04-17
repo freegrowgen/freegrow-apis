@@ -30,6 +30,7 @@ public class AppUserModel {
     private RoleEnum role;
     private AccountStatusEnum accountStatus;
     private Integer otp; 
+    private boolean googleSignUp;
 
 
     @CreatedDate

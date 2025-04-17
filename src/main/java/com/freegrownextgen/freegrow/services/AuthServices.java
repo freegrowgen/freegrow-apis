@@ -29,8 +29,7 @@ public class AuthServices implements AuthImpl {
     @Override
     public AuthEnums signUPImpl(SignUpRequestModel request) {
         try {
-            if (request.getFirstName().length() < 3 || !regexCheck.isValidEmail(request.getEmailId())
-                    || !regexCheck.isValidMobileNumber(request.getMobileNumber())) {
+            if (request.getFirstName().length() < 3 || !regexCheck.isValidEmail(request.getEmailId())) {
                 return AuthEnums.BAD_REQUEST;
             }
 
@@ -61,7 +60,7 @@ public class AuthServices implements AuthImpl {
                         "Welcome to FreeGrow!",
                         "Signup OTP Verification",
                         signupBody);
-                        signupEmailService.sendEmail();
+                signupEmailService.sendEmail();
 
                 return AuthEnums.OTP_SENT;
 
@@ -71,11 +70,17 @@ public class AuthServices implements AuthImpl {
                     userData.setFirstName(request.getFirstName());
                     userData.setLastName(request.getLastName());
                     userData.setEmailId(request.getEmailId());
-                    userData.setPassword(authUtils.hash(request.getPassword()));
                     userData.setMobileNumber(request.getMobileNumber());
                     userData.setRole(null);
                     userData.setAccountStatus(AccountStatusEnum.PENDING);
                     userData.setOtp(null);
+                    if (request.isGoogleSignUp()) {
+                        userData.setGoogleSignUp(true);
+                        userData.setPassword(null);
+                    } else {
+                        userData.setGoogleSignUp(false);
+                        userData.setPassword(authUtils.hash(request.getPassword()));
+                    }
 
                     AppUserModel user = authRepo.save(userData);
                     if (user.getEmailId() != null) {
