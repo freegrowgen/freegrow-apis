@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignUpRequestModel {
     private String firstName;
-    private String lastName;
+    private String lastName;    
     private String emailId;
     private String password;
     private String mobileNumber;
     private Integer otp;
+    private boolean googleSignUp;
 }

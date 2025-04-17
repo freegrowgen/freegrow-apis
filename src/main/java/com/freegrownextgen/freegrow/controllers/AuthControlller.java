@@ -23,8 +23,7 @@ public class AuthControlller {
     ResponseModel SignUp(@RequestBody SignUpRequestModel request) {
 
         ResponseModel response = new ResponseModel();
-        if (request.getFirstName() == null || request.getEmailId() == null || request.getMobileNumber() == null
-                || request.getMobileNumber() == null) {
+        if (request.getFirstName() == null || request.getEmailId() == null) {
             response.setData(AuthEnums.BAD_REQUEST);
             return response;
         }
