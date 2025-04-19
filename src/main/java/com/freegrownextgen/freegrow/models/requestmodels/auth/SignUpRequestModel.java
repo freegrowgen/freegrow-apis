@@ -15,4 +15,5 @@ public class SignUpRequestModel {
     private String mobileNumber;
     private Integer otp;
     private boolean googleSignUp;
+    private String profileUrl;
 }

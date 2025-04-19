@@ -35,7 +35,7 @@ public class AuthControlller {
     @PostMapping("/login")
     ResponseModel Login(@RequestBody LoginRequestModel request) {
         ResponseModel response = new ResponseModel();
-        if (request.getEmailId() == null || request.getPassword() == null) {
+        if (request.getEmailId() == null ) {
             response.setData(AuthEnums.BAD_REQUEST);
             return response;
         }

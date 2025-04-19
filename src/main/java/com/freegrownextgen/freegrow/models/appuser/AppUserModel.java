@@ -31,6 +31,8 @@ public class AppUserModel {
     private AccountStatusEnum accountStatus;
     private Integer otp; 
     private boolean googleSignUp;
+    private String userId;
+    private String profileUrl;
 
 
     @CreatedDate

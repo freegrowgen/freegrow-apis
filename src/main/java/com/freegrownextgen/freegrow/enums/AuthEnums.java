@@ -12,5 +12,7 @@ public enum AuthEnums {
     OTP_SENT,
     INVALID_OTP,
     USER_NOT_FOUND,
-    
+    INVLAID_NAME,
+    INVALID_USER_LOGIN_TYPE_GOOGLE,
+    INVALID_USER_LOGIN_TYPE
 }

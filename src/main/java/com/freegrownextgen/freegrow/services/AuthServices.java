@@ -29,16 +29,20 @@ public class AuthServices implements AuthImpl {
     @Override
     public AuthEnums signUPImpl(SignUpRequestModel request) {
         try {
-            if (request.getFirstName().length() < 3 || !regexCheck.isValidEmail(request.getEmailId())) {
-                return AuthEnums.BAD_REQUEST;
+            if (request.getFirstName().length() < 3) {
+                return AuthEnums.INVLAID_NAME;
+            }
+            if (!regexCheck.isValidEmail(request.getEmailId())) {
+                return AuthEnums.INVLAID_EMAIL_ID;
             }
 
             if (authRepo.findByEmailId(request.getEmailId()) != null) {
                 return AuthEnums.USER_EXISTS;
             }
+
             TempAppUserModel tempUser = tempAuthRepo.findByEmailId(request.getEmailId());
 
-            if (request.getOtp() == null) {
+            if (request.getOtp() == null && !request.isGoogleSignUp()) {
                 int signUpOtp = authUtils.generateOtp();
 
                 TempAppUserModel tempUserData = new TempAppUserModel();
@@ -65,7 +69,17 @@ public class AuthServices implements AuthImpl {
                 return AuthEnums.OTP_SENT;
 
             } else {
-                if (request.getOtp().toString().equals(tempUser.getOtp().toString())) {
+                boolean isValid;
+
+                if (request.isGoogleSignUp())
+                    isValid = true;
+                else if (request.getOtp().toString().equals(tempUser.getOtp().toString()))
+                    isValid = true;
+
+                else
+                    isValid = false;
+
+                if (isValid) {
                     AppUserModel userData = new AppUserModel();
                     userData.setFirstName(request.getFirstName());
                     userData.setLastName(request.getLastName());
@@ -77,6 +91,7 @@ public class AuthServices implements AuthImpl {
                     if (request.isGoogleSignUp()) {
                         userData.setGoogleSignUp(true);
                         userData.setPassword(null);
+                        userData.setProfileUrl(request.getProfileUrl());
                     } else {
                         userData.setGoogleSignUp(false);
                         userData.setPassword(authUtils.hash(request.getPassword()));
@@ -109,36 +124,56 @@ public class AuthServices implements AuthImpl {
                 return AuthEnums.INVLAID_EMAIL_ID;
             }
 
-            if (authRepo.findByEmailId(request.getEmailId()) == null) {
-                return AuthEnums.USER_NOT_FOUND;
-            }
+            AppUserModel loginUser = authRepo.findByEmailId(request.getEmailId());
+            if (loginUser != null && loginUser.isGoogleSignUp() ) {
 
-            if (request.getOtp() == null) {
-                int loginOtp = authUtils.generateOtp();
-                int user = authRepo.findAndUpdateOtp(request.getEmailId(), loginOtp);
-                String loginBody = "Your OTP to login into FreeGrow is - " + loginOtp
-                        + ". Please do not share it with anyone.";
+                if (request.isGoogleLogin()) {
+                    return AuthEnums.SUCCESS;
 
-                EmailServices loginEmailService = new EmailServices(
-                        request.getEmailId(),
-                        "FreeGrow Login Verification",
-                        "Login OTP Verification",
-                        loginBody);
-                loginEmailService.sendEmail();
-
-                if (user == 1) {
-                    return AuthEnums.OTP_SENT;
                 } else {
-                    return AuthEnums.INTERNAL_SERVER_ERROR;
+                    return AuthEnums.INVALID_USER_LOGIN_TYPE;
                 }
 
             } else {
-                AppUserModel userData = authRepo.findByEmailId(request.getEmailId());
-                System.err.println(userData.toString());
-                if (userData.getOtp().toString().equals(request.getOtp().toString())) {
-                    return AuthEnums.SUCCESS;
+                if (request.isGoogleLogin() && loginUser != null) {
+                    return AuthEnums.INVALID_USER_LOGIN_TYPE_GOOGLE;
+                } else if (request.isGoogleLogin() && loginUser == null) {
+                    SignUpRequestModel signUpRequest = new SignUpRequestModel();
+                    signUpRequest.setEmailId(request.getEmailId());
+                    signUpRequest.setGoogleSignUp(true);
+                    signUpRequest.setProfileUrl(request.getProfileUrl());
+                    signUpRequest.setFirstName(request.getFirstName());
+
+                    return signUPImpl(signUpRequest);
+                }
+                if (request.getOtp() == null) {
+                    int loginOtp = authUtils.generateOtp();
+                    int user = authRepo.findAndUpdateOtp(request.getEmailId(), loginOtp);
+                    String loginBody = "Your OTP to login into FreeGrow is - " + loginOtp
+                            + ". Please do not share it with anyone.";
+
+                    EmailServices loginEmailService = new EmailServices(
+                            request.getEmailId(),
+                            "FreeGrow Login Verification",
+                            "Login OTP Verification",
+                            loginBody);
+                    loginEmailService.sendEmail();
+
+                    if (user == 1) {
+                        return AuthEnums.OTP_SENT;
+                    } else {
+                        return AuthEnums.INTERNAL_SERVER_ERROR;
+                    }
+
                 } else {
-                    return AuthEnums.INVALID_OTP;
+                    AppUserModel userData = authRepo.findByEmailId(request.getEmailId());
+                    System.err.println(userData.toString());
+                    if (userData.getOtp().toString().equals(request.getOtp().toString())) {
+                        return AuthEnums.SUCCESS;
+                    } else {
+                        return AuthEnums.INVALID_OTP;
+                    }
+
                 }
 
             }
