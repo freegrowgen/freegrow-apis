@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequestModel {
+public class ForgotPasswordRequestModel{
     private String emailId;
-    private String password; 
-    private Integer otp;
-    private boolean googleLogin;
-    private String firstName;
-    private String profileUrl;
+
 }
