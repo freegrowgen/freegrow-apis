@@ -1,5 +1,7 @@
 package com.freegrownextgen.freegrow.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,8 +9,11 @@ import com.freegrownextgen.freegrow.enums.AccountStatusEnum;
 import com.freegrownextgen.freegrow.enums.AuthEnums;
 import com.freegrownextgen.freegrow.implementations.AuthImpl;
 import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
+import com.freegrownextgen.freegrow.models.appuser.ResetPassword;
 import com.freegrownextgen.freegrow.models.appuser.TempAppUserModel;
+import com.freegrownextgen.freegrow.models.requestmodels.auth.ForgotPasswordRequestModel;
 import com.freegrownextgen.freegrow.models.requestmodels.auth.LoginRequestModel;
+import com.freegrownextgen.freegrow.models.requestmodels.auth.ResetPasswordRequestModel;
 import com.freegrownextgen.freegrow.models.requestmodels.auth.SignUpRequestModel;
 import com.freegrownextgen.freegrow.repository.AuthRepository;
 import com.freegrownextgen.freegrow.repository.TempAuthRepository;
@@ -57,8 +62,13 @@ public class AuthServices implements AuthImpl {
                     tempAuthRepo.save(tempUserData);
 
                 }
-                String signupBody = "Thank you for signing up on FreeGrow. Your OTP for email verification is -"
-                        + signUpOtp + ". Let's grow together!";
+                String signupBody = "Dear User,\n\n"
+                        + "Thank you for signing up on FreeGrow!\n"
+                        + "Your One-Time Password (OTP) for email verification is: " + signUpOtp + "\n\n"
+                        + "Please enter this OTP to verify your email address and activate your account.\n\n"
+                        + "Welcome aboard — let's grow together!\n\n"
+                        + "Best regards,\n"
+                        + "The FreeGrow Team";
                 EmailServices signupEmailService = new EmailServices(
                         request.getEmailId(),
                         "Welcome to FreeGrow!",
@@ -125,7 +135,7 @@ public class AuthServices implements AuthImpl {
             }
 
             AppUserModel loginUser = authRepo.findByEmailId(request.getEmailId());
-            if (loginUser != null && loginUser.isGoogleSignUp() ) {
+            if (loginUser != null && loginUser.isGoogleSignUp()) {
 
                 if (request.isGoogleLogin()) {
                     return AuthEnums.SUCCESS;
@@ -149,8 +159,13 @@ public class AuthServices implements AuthImpl {
                 if (request.getOtp() == null) {
                     int loginOtp = authUtils.generateOtp();
                     int user = authRepo.findAndUpdateOtp(request.getEmailId(), loginOtp);
-                    String loginBody = "Your OTP to login into FreeGrow is - " + loginOtp
-                            + ". Please do not share it with anyone.";
+                    String loginBody = "Dear User,\n\n"
+                            + "Your One-Time Password (OTP) for logging into your FreeGrow account is: " + loginOtp
+                            + "\n\n"
+                            + "Please do not share this OTP with anyone. It is valid for a limited time only.\n\n"
+                            + "If you did not initiate this request, please ignore this message.\n\n"
+                            + "Regards,\n"
+                            + "The FreeGrow Team";
 
                     EmailServices loginEmailService = new EmailServices(
                             request.getEmailId(),
@@ -180,6 +195,85 @@ public class AuthServices implements AuthImpl {
 
         } catch (Exception e) {
             System.out.println(e);
+            return AuthEnums.INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    @Override
+    public AuthEnums forgotPasswordImpl(ForgotPasswordRequestModel request) {
+        try {
+            if (!regexCheck.isValidEmail(request.getEmailId())) {
+                return AuthEnums.INVLAID_EMAIL_ID;
+            }
+
+            AppUserModel user = authRepo.findByEmailId(request.getEmailId());
+            if (user == null)
+                return AuthEnums.USER_NOT_FOUND;
+            else if (user.isGoogleSignUp()) {
+                return AuthEnums.INVALID_USER_LOGIN_TYPE;
+            }
+
+            else if (user != null) {
+                String token = authUtils.generateRandomToken(20);
+                ResetPassword resetPassword = new ResetPassword();
+                resetPassword.setEmailId(request.getEmailId());
+                resetPassword.setResetPasswordToken(token);
+                resetPassword.setCreatedAt(LocalDateTime.now());
+                authRepo.findAndUpdateresetPassword(request.getEmailId(), resetPassword);
+
+                String resetLink = "https://freegrow.live/reset-password/" + token;
+
+                String subject = "Reset your FreeGrow password";
+                String body = "Hi " + user.getFirstName() + ",\n\n"
+                        + "You recently requested to reset your password for your FreeGrow account.\n"
+                        + "Click the link below to reset it (this link is valid for 10 minutes):\n\n"
+                        + resetLink + "\n\n"
+                        + "If you did not request a password reset, you can safely ignore this email.\n\n"
+                        + "Thanks,\n"
+                        + "The FreeGrow Team";
+
+                EmailServices emailService = new EmailServices(
+                        request.getEmailId(),
+                        "Password Reset - FreeGrow",
+                        subject,
+                        body);
+                emailService.sendEmail();
+                return AuthEnums.SUCCESS;
+
+            }
+            return AuthEnums.ERROR;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AuthEnums.INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    @Override
+    public AuthEnums resetPasswordImpl(ResetPasswordRequestModel request) {
+
+        try {
+            if (request.getPassword() == null) {
+                return AuthEnums.BAD_REQUEST;
+            }
+
+            AppUserModel user = authRepo.findByResetPasswordToken(request.getToken()).orElse(null);
+            boolean expired = user.getResetPassword().getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
+            if (user != null && !expired) {
+                int updateCount = authRepo.findAndUpdatePassword(user.getEmailId(), request.getPassword());
+
+                if (updateCount == 1) {
+                    return AuthEnums.SUCCESS;
+                } else {
+                    return AuthEnums.ERROR;
+                }
+
+            } else {
+                return AuthEnums.LINK_EXPIRED;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
             return AuthEnums.INTERNAL_SERVER_ERROR;
         }
 

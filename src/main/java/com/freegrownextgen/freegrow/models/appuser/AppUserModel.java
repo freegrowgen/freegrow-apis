@@ -29,11 +29,12 @@ public class AppUserModel {
     private String mobileNumber;
     private RoleEnum role;
     private AccountStatusEnum accountStatus;
-    private Integer otp; 
+    private Integer otp;
     private boolean googleSignUp;
     private String userId;
     private String profileUrl;
-
+    private boolean firstTimeLogin = true;
+    ResetPassword resetPassword;
 
     @CreatedDate
     private Instant createdAt;
