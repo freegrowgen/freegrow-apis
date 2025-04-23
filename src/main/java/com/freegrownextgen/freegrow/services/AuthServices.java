@@ -63,18 +63,20 @@ public class AuthServices implements AuthImpl {
 
                 }
                 String signupBody = "Dear User,\n\n"
-                        + "Thank you for signing up on FreeGrow!\n"
-                        + "Your One-Time Password (OTP) for email verification is: " + signUpOtp + "\n\n"
-                        + "Please enter this OTP to verify your email address and activate your account.\n\n"
-                        + "Welcome aboard — let's grow together!\n\n"
-                        + "Best regards,\n"
+                        + "Your One-Time Password (OTP) for signing up for your FreeGrow account : " + signUpOtp
+                        + "\n\n"
+                        + "Please do not share this OTP with anyone. It is valid for a limited time only.\n\n"
+                        + "If you did not initiate this request, please ignore this message.\n\n"
+                        + "Regards,\n"
                         + "The FreeGrow Team";
+
                 EmailServices signupEmailService = new EmailServices(
                         request.getEmailId(),
-                        "Welcome to FreeGrow!",
+                        "Welcome to FreeGrow",
                         "Signup OTP Verification",
                         signupBody);
-                signupEmailService.sendEmail();
+
+                var response = signupEmailService.sendEmail();
 
                 return AuthEnums.OTP_SENT;
 
