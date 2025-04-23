@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.freegrownextgen.freegrow.enums.AuthEnums;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.ForgotPasswordRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.LoginRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.ResetPasswordRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.SignUpRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.response.ResponseModel;
+import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.ForgotPasswordRequestDTO;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.LoginRequesDTO;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.ResetPasswordRequestDTO;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.SignUpRequestDTO;
+import com.freegrownextgen.freegrow.models.responsedtos.auth.LoginResponseDTO;
+import com.freegrownextgen.freegrow.models.responsedtos.auth.ResponseDTO;
+import com.freegrownextgen.freegrow.repository.AuthRepository;
 import com.freegrownextgen.freegrow.services.AuthServices;
 
 @RestController
@@ -21,10 +24,13 @@ public class AuthControlller {
     @Autowired
     AuthServices auth;
 
-    @PostMapping("/signup")
-    ResponseModel SignUp(@RequestBody SignUpRequestModel request) {
+    @Autowired
+    AuthRepository authRepo;
 
-        ResponseModel response = new ResponseModel();
+    @PostMapping("/signup")
+    ResponseDTO SignUp(@RequestBody SignUpRequestDTO request) {
+
+        ResponseDTO response = new ResponseDTO();
         if (request.getFirstName() == null || request.getEmailId() == null) {
             response.setData(AuthEnums.BAD_REQUEST);
             return response;
@@ -35,30 +41,42 @@ public class AuthControlller {
     }
 
     @PostMapping("/login")
-    ResponseModel Login(@RequestBody LoginRequestModel request) {
-        ResponseModel response = new ResponseModel();
-        if (request.getEmailId() == null ) {
-            response.setData(AuthEnums.BAD_REQUEST);
-            return response;
-        }
-        response.setData(auth.loginImpl(request));
-        return response;
-    }
-
-
-    @PostMapping("/forgotpassword")
-    ResponseModel forgotPassword(@RequestBody ForgotPasswordRequestModel request) {
-        ResponseModel response = new ResponseModel();
+    LoginResponseDTO Login(@RequestBody LoginRequesDTO request) {
+        LoginResponseDTO response = new LoginResponseDTO();
         if (request.getEmailId() == null) {
             response.setData(AuthEnums.BAD_REQUEST);
             return response;
         }
-        response.setData(auth.forgotPasswordImpl(request));
+
+        AuthEnums loginImplResposne = auth.loginImpl(request);
+
+        response.setData(loginImplResposne);
+
+        if (loginImplResposne == AuthEnums.SUCCESS) {
+            AppUserModel userData = authRepo.findByEmailId(request.getEmailId());
+            if (userData != null) {
+                response.setUserName(userData.getUserName());
+            }
+        }
         return response;
     }
+
+    @PostMapping("/forgotpassword")
+    ResponseDTO forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
+        ResponseDTO response = new ResponseDTO();
+        if (request.getEmailId() == null) {
+            response.setData(AuthEnums.BAD_REQUEST);
+            return response;
+        }
+        AuthEnums loginImplResposne = auth.forgotPasswordImpl(request);
+        response.setData(loginImplResposne);
+
+        return response;
+    }
+
     @PostMapping("/resetpassword")
-    ResponseModel resetPassword(@RequestBody ResetPasswordRequestModel request) {
-        ResponseModel response = new ResponseModel();
+    ResponseDTO resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        ResponseDTO response = new ResponseDTO();
         if (request.getPassword() == null) {
             response.setData(AuthEnums.BAD_REQUEST);
             return response;

@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.models.requestmodels.auth;
+package com.freegrownextgen.freegrow.models.requestdtos.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpRequestModel {
+public class SignUpRequestDTO {
     private String firstName;
     private String lastName;    
     private String emailId;

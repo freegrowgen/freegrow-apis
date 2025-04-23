@@ -9,6 +9,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Random;
 
 public class AuthUtils {
 
@@ -46,5 +47,11 @@ public class AuthUtils {
         Instant end = endDate.toInstant();
         long diffMinutes = Duration.between(start, end).toMinutes();
         return diffMinutes > minutes;
+    }
+
+    public String generateRandoUsername(String firstName) {
+        firstName = firstName.trim().toLowerCase().replaceAll("[^a-z]", "");
+        int randomNum = 10000 + new Random().nextInt(900000000); 
+        return firstName + "-" + randomNum;
     }
 }
