@@ -11,10 +11,10 @@ import com.freegrownextgen.freegrow.implementations.AuthImpl;
 import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
 import com.freegrownextgen.freegrow.models.appuser.ResetPassword;
 import com.freegrownextgen.freegrow.models.appuser.TempAppUserModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.ForgotPasswordRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.LoginRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.ResetPasswordRequestModel;
-import com.freegrownextgen.freegrow.models.requestmodels.auth.SignUpRequestModel;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.ForgotPasswordRequestDTO;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.LoginRequesDTO;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.ResetPasswordRequestDTO;
+import com.freegrownextgen.freegrow.models.requestdtos.auth.SignUpRequestDTO;
 import com.freegrownextgen.freegrow.repository.AuthRepository;
 import com.freegrownextgen.freegrow.repository.TempAuthRepository;
 import com.freegrownextgen.freegrow.utils.AuthUtils;
@@ -32,7 +32,7 @@ public class AuthServices implements AuthImpl {
     AuthUtils authUtils = new AuthUtils();
 
     @Override
-    public AuthEnums signUPImpl(SignUpRequestModel request) {
+    public AuthEnums signUPImpl(SignUpRequestDTO request) {
         try {
             if (request.getFirstName().length() < 3) {
                 return AuthEnums.INVLAID_NAME;
@@ -63,17 +63,19 @@ public class AuthServices implements AuthImpl {
 
                 }
                 String signupBody = "Dear User,\n\n"
-                        + "Thank you for signing up on FreeGrow!\n"
-                        + "Your One-Time Password (OTP) for email verification is: " + signUpOtp + "\n\n"
-                        + "Please enter this OTP to verify your email address and activate your account.\n\n"
-                        + "Welcome aboard — let's grow together!\n\n"
-                        + "Best regards,\n"
+                        + "Your One-Time Password (OTP) for signing up for your FreeGrow account : " + signUpOtp
+                        + "\n\n"
+                        + "Please do not share this OTP with anyone. It is valid for a limited time only.\n\n"
+                        + "If you did not initiate this request, please ignore this message.\n\n"
+                        + "Regards,\n"
                         + "The FreeGrow Team";
+
                 EmailServices signupEmailService = new EmailServices(
                         request.getEmailId(),
-                        "Welcome to FreeGrow!",
+                        "Welcome to FreeGrow",
                         "Signup OTP Verification",
                         signupBody);
+
                 signupEmailService.sendEmail();
 
                 return AuthEnums.OTP_SENT;
@@ -98,6 +100,8 @@ public class AuthServices implements AuthImpl {
                     userData.setRole(null);
                     userData.setAccountStatus(AccountStatusEnum.PENDING);
                     userData.setOtp(null);
+                    userData.setUserName(authUtils.generateRandoUsername(request.getFirstName()));
+
                     if (request.isGoogleSignUp()) {
                         userData.setGoogleSignUp(true);
                         userData.setPassword(null);
@@ -128,7 +132,7 @@ public class AuthServices implements AuthImpl {
     }
 
     @Override
-    public AuthEnums loginImpl(LoginRequestModel request) {
+    public AuthEnums loginImpl(LoginRequesDTO request) {
         try {
             if (!regexCheck.isValidEmail(request.getEmailId())) {
                 return AuthEnums.INVLAID_EMAIL_ID;
@@ -148,7 +152,7 @@ public class AuthServices implements AuthImpl {
                 if (request.isGoogleLogin() && loginUser != null) {
                     return AuthEnums.INVALID_USER_LOGIN_TYPE_GOOGLE;
                 } else if (request.isGoogleLogin() && loginUser == null) {
-                    SignUpRequestModel signUpRequest = new SignUpRequestModel();
+                    SignUpRequestDTO signUpRequest = new SignUpRequestDTO();
                     signUpRequest.setEmailId(request.getEmailId());
                     signUpRequest.setGoogleSignUp(true);
                     signUpRequest.setProfileUrl(request.getProfileUrl());
@@ -200,7 +204,7 @@ public class AuthServices implements AuthImpl {
     }
 
     @Override
-    public AuthEnums forgotPasswordImpl(ForgotPasswordRequestModel request) {
+    public AuthEnums forgotPasswordImpl(ForgotPasswordRequestDTO request) {
         try {
             if (!regexCheck.isValidEmail(request.getEmailId())) {
                 return AuthEnums.INVLAID_EMAIL_ID;
@@ -250,7 +254,7 @@ public class AuthServices implements AuthImpl {
     }
 
     @Override
-    public AuthEnums resetPasswordImpl(ResetPasswordRequestModel request) {
+    public AuthEnums resetPasswordImpl(ResetPasswordRequestDTO request) {
 
         try {
             if (request.getPassword() == null) {
