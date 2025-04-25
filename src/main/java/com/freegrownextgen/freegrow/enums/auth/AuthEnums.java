@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.enums;
+package com.freegrownextgen.freegrow.enums.auth;
 
 public enum AuthEnums {
     SUCCESS,

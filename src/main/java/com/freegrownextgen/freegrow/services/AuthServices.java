@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.freegrownextgen.freegrow.enums.AccountStatusEnum;
-import com.freegrownextgen.freegrow.enums.AuthEnums;
+import com.freegrownextgen.freegrow.enums.auth.AuthEnums;
 import com.freegrownextgen.freegrow.implementations.AuthImpl;
 import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
 import com.freegrownextgen.freegrow.models.appuser.ResetPassword;

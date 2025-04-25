@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.freegrownextgen.freegrow.enums.AuthEnums;
+import com.freegrownextgen.freegrow.enums.auth.AuthEnums;
 import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.ForgotPasswordRequestDTO;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.LoginRequesDTO;

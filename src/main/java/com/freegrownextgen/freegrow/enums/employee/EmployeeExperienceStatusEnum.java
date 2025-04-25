@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.enums;
+package com.freegrownextgen.freegrow.enums.employee;
 
 public enum EmployeeExperienceStatusEnum {
     completed,

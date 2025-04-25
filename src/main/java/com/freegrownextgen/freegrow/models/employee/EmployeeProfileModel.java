@@ -16,16 +16,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-/**
- * EmployeeProfileModel is a data model class that represents the profile of an employee.
- * It extends the AppUserProfileModel class and includes additional fields specific to employees.
- */
+
 public class EmployeeProfileModel extends AppUserProfileModel {
     private String employeeId;
     private String department;
@@ -41,7 +36,7 @@ public class EmployeeProfileModel extends AppUserProfileModel {
     private List<Experience> employeeExperience;
     private List<SkillModel> employeeSkills;
     private List<EducationModel> employeeEducation;
-     @CreatedDate
+    @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate

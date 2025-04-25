@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "employee_users")
+@Document(collection = "employees")
 /**
  * EmployeeUserModel is a model class that represents an employee user in the system.
  * It contains the email ID of the employee user.
  */
-public class EmployeeUserModel {
+public class EmployeeModel {
     private String emailId;
 
 }

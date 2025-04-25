@@ -1,6 +1,6 @@
 package com.freegrownextgen.freegrow.implementations;
 
-import com.freegrownextgen.freegrow.enums.AuthEnums;
+import com.freegrownextgen.freegrow.enums.auth.AuthEnums;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.ForgotPasswordRequestDTO;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.LoginRequesDTO;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.ResetPasswordRequestDTO;

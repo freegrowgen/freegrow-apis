@@ -21,11 +21,6 @@ public class AppUserProfileModel {
     private String lastName;
     private String emailId;
     private String phoneNumber;
-    private String address;
-    private String city;
-    private String state;
-    private String country;
-    private String zipCode;
     private String profilePictureUrl;      
      @CreatedDate
     private Instant createdAt;
