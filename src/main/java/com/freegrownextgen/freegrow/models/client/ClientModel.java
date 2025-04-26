@@ -21,7 +21,6 @@ public class ClientModel {
     private String firstName;
     private String lastName;
     private String mobileNumber;
-    private String isGoogleLogin;
     private MembershipPlanEnums meberShipPlan;
     private String profileUrl;
     private Integer noOfJobs;
