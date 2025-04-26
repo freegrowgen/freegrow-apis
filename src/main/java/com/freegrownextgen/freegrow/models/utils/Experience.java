@@ -1,6 +1,6 @@
 package com.freegrownextgen.freegrow.models.utils;
 
-import com.freegrownextgen.freegrow.enums.EmployeeExperienceStatusEnum;
+import com.freegrownextgen.freegrow.enums.employee.EmployeeExperienceStatusEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

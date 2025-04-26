@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class LoginResponseDTO {
     private Object data;
     private String userName;
+    private boolean isFirstTimeLogin;
 
 }

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.freegrownextgen.freegrow.enums.AccountStatusEnum;
-import com.freegrownextgen.freegrow.enums.AuthEnums;
+import com.freegrownextgen.freegrow.enums.response.ResponseEnums;
 import com.freegrownextgen.freegrow.implementations.AuthImpl;
 import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
 import com.freegrownextgen.freegrow.models.appuser.ResetPassword;
@@ -32,17 +32,17 @@ public class AuthServices implements AuthImpl {
     AuthUtils authUtils = new AuthUtils();
 
     @Override
-    public AuthEnums signUPImpl(SignUpRequestDTO request) {
+    public ResponseEnums signUPImpl(SignUpRequestDTO request) {
         try {
             if (request.getFirstName().length() < 3) {
-                return AuthEnums.INVLAID_NAME;
+                return ResponseEnums.INVLAID_NAME;
             }
             if (!regexCheck.isValidEmail(request.getEmailId())) {
-                return AuthEnums.INVLAID_EMAIL_ID;
+                return ResponseEnums.INVLAID_EMAIL_ID;
             }
 
             if (authRepo.findByEmailId(request.getEmailId()) != null) {
-                return AuthEnums.USER_EXISTS;
+                return ResponseEnums.USER_EXISTS;
             }
 
             TempAppUserModel tempUser = tempAuthRepo.findByEmailId(request.getEmailId());
@@ -78,7 +78,7 @@ public class AuthServices implements AuthImpl {
 
                 signupEmailService.sendEmail();
 
-                return AuthEnums.OTP_SENT;
+                return ResponseEnums.OTP_SENT;
 
             } else {
                 boolean isValid;
@@ -101,7 +101,7 @@ public class AuthServices implements AuthImpl {
                     userData.setAccountStatus(AccountStatusEnum.PENDING);
                     userData.setOtp(null);
                     userData.setUserName(authUtils.generateRandoUsername(request.getFirstName()));
-
+                    userData.setFirstTimeLogin(true);
                     if (request.isGoogleSignUp()) {
                         userData.setGoogleSignUp(true);
                         userData.setPassword(null);
@@ -110,47 +110,46 @@ public class AuthServices implements AuthImpl {
                         userData.setGoogleSignUp(false);
                         userData.setPassword(authUtils.hash(request.getPassword()));
                     }
-
                     AppUserModel user = authRepo.save(userData);
                     if (user.getEmailId() != null) {
                         tempAuthRepo.deleteByEmailId(request.getEmailId());
-                        return AuthEnums.SUCCESS;
+                        return ResponseEnums.SUCCESS;
                     } else {
-                        return AuthEnums.ERROR;
+                        return ResponseEnums.ERROR;
                     }
                 } else {
-                    return AuthEnums.INVALID_OTP;
+                    return ResponseEnums.INVALID_OTP;
 
                 }
             }
 
         } catch (Exception e) {
             System.out.println(e);
-            return AuthEnums.INTERNAL_SERVER_ERROR;
+            return ResponseEnums.INTERNAL_SERVER_ERROR;
         }
 
     }
 
     @Override
-    public AuthEnums loginImpl(LoginRequesDTO request) {
+    public ResponseEnums loginImpl(LoginRequesDTO request) {
         try {
             if (!regexCheck.isValidEmail(request.getEmailId())) {
-                return AuthEnums.INVLAID_EMAIL_ID;
+                return ResponseEnums.INVLAID_EMAIL_ID;
             }
 
             AppUserModel loginUser = authRepo.findByEmailId(request.getEmailId());
             if (loginUser != null && loginUser.isGoogleSignUp()) {
 
                 if (request.isGoogleLogin()) {
-                    return AuthEnums.SUCCESS;
+                    return ResponseEnums.SUCCESS;
 
                 } else {
-                    return AuthEnums.INVALID_USER_LOGIN_TYPE;
+                    return ResponseEnums.INVALID_USER_LOGIN_TYPE;
                 }
 
             } else {
                 if (request.isGoogleLogin() && loginUser != null) {
-                    return AuthEnums.INVALID_USER_LOGIN_TYPE_GOOGLE;
+                    return ResponseEnums.INVALID_USER_LOGIN_TYPE_GOOGLE;
                 } else if (request.isGoogleLogin() && loginUser == null) {
                     SignUpRequestDTO signUpRequest = new SignUpRequestDTO();
                     signUpRequest.setEmailId(request.getEmailId());
@@ -179,18 +178,18 @@ public class AuthServices implements AuthImpl {
                     loginEmailService.sendEmail();
 
                     if (user == 1) {
-                        return AuthEnums.OTP_SENT;
+                        return ResponseEnums.OTP_SENT;
                     } else {
-                        return AuthEnums.INTERNAL_SERVER_ERROR;
+                        return ResponseEnums.INTERNAL_SERVER_ERROR;
                     }
 
                 } else {
                     AppUserModel userData = authRepo.findByEmailId(request.getEmailId());
                     System.err.println(userData.toString());
                     if (userData.getOtp().toString().equals(request.getOtp().toString())) {
-                        return AuthEnums.SUCCESS;
+                        return ResponseEnums.SUCCESS;
                     } else {
-                        return AuthEnums.INVALID_OTP;
+                        return ResponseEnums.INVALID_OTP;
                     }
 
                 }
@@ -199,22 +198,22 @@ public class AuthServices implements AuthImpl {
 
         } catch (Exception e) {
             System.out.println(e);
-            return AuthEnums.INTERNAL_SERVER_ERROR;
+            return ResponseEnums.INTERNAL_SERVER_ERROR;
         }
     }
 
     @Override
-    public AuthEnums forgotPasswordImpl(ForgotPasswordRequestDTO request) {
+    public ResponseEnums forgotPasswordImpl(ForgotPasswordRequestDTO request) {
         try {
             if (!regexCheck.isValidEmail(request.getEmailId())) {
-                return AuthEnums.INVLAID_EMAIL_ID;
+                return ResponseEnums.INVLAID_EMAIL_ID;
             }
 
             AppUserModel user = authRepo.findByEmailId(request.getEmailId());
             if (user == null)
-                return AuthEnums.USER_NOT_FOUND;
+                return ResponseEnums.USER_NOT_FOUND;
             else if (user.isGoogleSignUp()) {
-                return AuthEnums.INVALID_USER_LOGIN_TYPE;
+                return ResponseEnums.INVALID_USER_LOGIN_TYPE;
             }
 
             else if (user != null) {
@@ -242,23 +241,23 @@ public class AuthServices implements AuthImpl {
                         subject,
                         body);
                 emailService.sendEmail();
-                return AuthEnums.SUCCESS;
+                return ResponseEnums.SUCCESS;
 
             }
-            return AuthEnums.ERROR;
+            return ResponseEnums.ERROR;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return AuthEnums.INTERNAL_SERVER_ERROR;
+            return ResponseEnums.INTERNAL_SERVER_ERROR;
         }
     }
 
     @Override
-    public AuthEnums resetPasswordImpl(ResetPasswordRequestDTO request) {
+    public ResponseEnums resetPasswordImpl(ResetPasswordRequestDTO request) {
 
         try {
             if (request.getPassword() == null) {
-                return AuthEnums.BAD_REQUEST;
+                return ResponseEnums.BAD_REQUEST;
             }
 
             AppUserModel user = authRepo.findByResetPasswordToken(request.getToken()).orElse(null);
@@ -267,18 +266,18 @@ public class AuthServices implements AuthImpl {
                 int updateCount = authRepo.findAndUpdatePassword(user.getEmailId(), request.getPassword());
 
                 if (updateCount == 1) {
-                    return AuthEnums.SUCCESS;
+                    return ResponseEnums.SUCCESS;
                 } else {
-                    return AuthEnums.ERROR;
+                    return ResponseEnums.ERROR;
                 }
 
             } else {
-                return AuthEnums.LINK_EXPIRED;
+                return ResponseEnums.LINK_EXPIRED;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return AuthEnums.INTERNAL_SERVER_ERROR;
+            return ResponseEnums.INTERNAL_SERVER_ERROR;
         }
 
     }
