@@ -1,0 +1,21 @@
+package com.freegrownextgen.freegrow.enums.employee;
+
+public enum EmployeeDesignationEnums {
+    INTERN,
+    TRAINEE,
+    JUNIOR_DEVELOPER,
+    SOFTWARE_ENGINEER,
+    SENIOR_SOFTWARE_ENGINEER,
+    FULL_STACK_DEVELOPER,
+    FRONTEND_DEVELOPER,
+    BACKEND_DEVELOPER,
+    QA_ENGINEER,
+    UI_UX_DESIGNER,
+    DATA_ANALYST,
+    DEVOPS_ENGINEER,
+    MARKETING_EXECUTIVE,
+    SALES_EXECUTIVE,
+    CONTENT_WRITER,
+    DESIGNER,
+    OTHER
+}

@@ -1,6 +1,6 @@
-package com.freegrownextgen.freegrow.enums;
+package com.freegrownextgen.freegrow.enums.response;
 
-public enum AuthEnums {
+public enum ResponseEnums {
     SUCCESS,
     ERROR,
     UNAUTHORIZED,
