@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.freegrownextgen.freegrow.enums.auth.AuthEnums;
+import com.freegrownextgen.freegrow.enums.response.ResponseEnums;
 import com.freegrownextgen.freegrow.models.appuser.AppUserModel;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.ForgotPasswordRequestDTO;
 import com.freegrownextgen.freegrow.models.requestdtos.auth.LoginRequesDTO;
@@ -32,7 +32,7 @@ public class AuthControlller {
 
         ResponseDTO response = new ResponseDTO();
         if (request.getFirstName() == null || request.getEmailId() == null) {
-            response.setData(AuthEnums.BAD_REQUEST);
+            response.setData(ResponseEnums.BAD_REQUEST);
             return response;
         }
 
@@ -44,18 +44,19 @@ public class AuthControlller {
     LoginResponseDTO Login(@RequestBody LoginRequesDTO request) {
         LoginResponseDTO response = new LoginResponseDTO();
         if (request.getEmailId() == null) {
-            response.setData(AuthEnums.BAD_REQUEST);
+            response.setData(ResponseEnums.BAD_REQUEST);
             return response;
         }
 
-        AuthEnums loginImplResposne = auth.loginImpl(request);
+        ResponseEnums loginImplResposne = auth.loginImpl(request);
 
         response.setData(loginImplResposne);
 
-        if (loginImplResposne == AuthEnums.SUCCESS) {
+        if (loginImplResposne == ResponseEnums.SUCCESS) {
             AppUserModel userData = authRepo.findByEmailId(request.getEmailId());
             if (userData != null) {
                 response.setUserName(userData.getUserName());
+                response.setFirstTimeLogin((userData.isFirstTimeLogin()));
             }
         }
         return response;
@@ -65,10 +66,10 @@ public class AuthControlller {
     ResponseDTO forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
         ResponseDTO response = new ResponseDTO();
         if (request.getEmailId() == null) {
-            response.setData(AuthEnums.BAD_REQUEST);
+            response.setData(ResponseEnums.BAD_REQUEST);
             return response;
         }
-        AuthEnums loginImplResposne = auth.forgotPasswordImpl(request);
+        ResponseEnums loginImplResposne = auth.forgotPasswordImpl(request);
         response.setData(loginImplResposne);
 
         return response;
@@ -78,7 +79,7 @@ public class AuthControlller {
     ResponseDTO resetPassword(@RequestBody ResetPasswordRequestDTO request) {
         ResponseDTO response = new ResponseDTO();
         if (request.getPassword() == null) {
-            response.setData(AuthEnums.BAD_REQUEST);
+            response.setData(ResponseEnums.BAD_REQUEST);
             return response;
         }
         response.setData(auth.resetPasswordImpl(request));
