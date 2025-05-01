@@ -1,5 +1,7 @@
 package com.freegrownextgen.freegrow.models.utils;
 
+import com.freegrownextgen.freegrow.enums.employee.SkillProficiencyEnums;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +14,10 @@ import lombok.NoArgsConstructor;
  * It contains various fields related to the user's skills and certifications.
  */
 public class SkillModel {
-    private String skillName;
+    private SkillModel skillData;
     private String skillDescription;
     private Integer skillLevel;
-    private String skillProficiency;
+    private SkillProficiencyEnums skillProficiency;
     private String skillExperience;
     private String skillCertification;
     private String skillCertificationUrl;
