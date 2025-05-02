@@ -13,7 +13,5 @@ import lombok.NoArgsConstructor;
 public class SkillsModel {
     private long id;
     private String name;
-    private String _id;
 
-    
 }

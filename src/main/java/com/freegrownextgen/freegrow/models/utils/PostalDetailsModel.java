@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "postal_data")
 public class PostalDetailsModel {
-    private String _id;
     private String stateName;
     private String districtName;
     private Integer pincode;
