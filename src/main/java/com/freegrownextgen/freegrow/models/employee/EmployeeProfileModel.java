@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.freegrownextgen.freegrow.models.appuser.AppUserProfileModel;
+import com.freegrownextgen.freegrow.models.utils.DesignationModel;
 import com.freegrownextgen.freegrow.models.utils.EducationModel;
 import com.freegrownextgen.freegrow.models.utils.Experience;
 import com.freegrownextgen.freegrow.models.utils.SkillModel;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class EmployeeProfileModel extends AppUserProfileModel {
     private String employeeId;
     private String department;
-    private String designation;
+    private DesignationModel designation;
     private String joiningDate;
     private String employeeStatus;
     private String employeeType;

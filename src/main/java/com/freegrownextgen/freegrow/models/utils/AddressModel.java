@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.models;
+package com.freegrownextgen.freegrow.models.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
