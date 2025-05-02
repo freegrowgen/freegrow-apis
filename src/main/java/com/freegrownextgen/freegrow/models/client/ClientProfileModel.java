@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.freegrownextgen.freegrow.models.AddressModel;
+import com.freegrownextgen.freegrow.models.utils.AddressModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
