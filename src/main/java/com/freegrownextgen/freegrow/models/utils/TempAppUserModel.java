@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.models.appuser;
+package com.freegrownextgen.freegrow.models.utils;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 

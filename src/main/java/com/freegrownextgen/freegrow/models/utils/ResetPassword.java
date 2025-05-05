@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.models.appuser;
+package com.freegrownextgen.freegrow.models.utils;
 
 import java.time.LocalDateTime;
 

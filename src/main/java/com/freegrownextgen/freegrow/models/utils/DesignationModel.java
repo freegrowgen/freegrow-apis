@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DesignationModel {
-    private String _id;
     private long id;
     private String name;
 
