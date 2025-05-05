@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.freegrownextgen.freegrow.models.appuser.AppUserProfileModel;
 import com.freegrownextgen.freegrow.models.utils.DesignationModel;
 import com.freegrownextgen.freegrow.models.utils.EducationModel;
 import com.freegrownextgen.freegrow.models.utils.Experience;
@@ -14,15 +14,13 @@ import com.freegrownextgen.freegrow.models.utils.SkillModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-
-public class EmployeeProfileModel extends AppUserProfileModel {
+@Document(collection = "employee_profiles")
+public class EmployeeProfileModel {
     private String employeeId;
     private String department;
     private DesignationModel designation;

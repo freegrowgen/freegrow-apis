@@ -1,4 +1,4 @@
-package com.freegrownextgen.freegrow.models.employer;
+package com.freegrownextgen.freegrow.models.freelancer;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Document(collection = "employers")
+@Document(collection = "freelancers")
 
-public class EmployerModel extends AppUserModel {
+public class FreelancerModel extends AppUserModel {
 
 }

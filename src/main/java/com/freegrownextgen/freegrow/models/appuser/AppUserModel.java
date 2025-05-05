@@ -7,7 +7,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.freegrownextgen.freegrow.enums.AccountStatusEnum;
+import com.freegrownextgen.freegrow.enums.MembershipPlanEnums;
 import com.freegrownextgen.freegrow.enums.RoleEnum;
+import com.freegrownextgen.freegrow.models.utils.ResetPassword;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +37,14 @@ public class AppUserModel {
     private boolean firstTimeLogin = true;
     ResetPassword resetPassword;
     private String userName;
-    
+    private MembershipPlanEnums memeberShipPlan = MembershipPlanEnums.FREE;
+    private long followers;
+    private long likes;
+    private String noOfjobs;
+    private String noOfActiveJobs;
+    private String noOfCompletedJobs;
+    private String totalSpend;
+    private float averageSpendPerHour;
 
     @CreatedDate
     private Instant createdAt;
